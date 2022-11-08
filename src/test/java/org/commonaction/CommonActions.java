@@ -1,8 +1,16 @@
 package org.commonaction;
 		
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.maven.shared.utils.io.FileUtils;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriver.Window;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -12,6 +20,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class CommonActions {
 	public static WebDriver drive;
+	public static int n=1;
 	public void launchChrome()
 	{
 		WebDriverManager.chromedriver().setup();
@@ -74,11 +83,41 @@ public void insertText(WebElement ele, String value)
 {
 	ele.sendKeys(value);
 }
-	public void pic()
+	public void pic() throws IOException
 	{
-
+TakesScreenshot picture =(TakesScreenshot)drive;
+File screenshotAs = picture.getScreenshotAs(OutputType.FILE);
+FileUtils.copyFile(screenshotAs, new File(".//screenhit//image"+n+".png"));
+n++;
+		
 	}
-
+public void windowSwitch()
+{
+	String parent = drive.getWindowHandle();
+	Set<String> newwindow = drive.getWindowHandles();
+	for (String string : newwindow) {
+		if(!parent.equals(string)) {
+			drive.switchTo().window(string);
+		}
+	}
+}
+public void Scrollelement(WebElement ele)
+{
+	JavascriptExecutor jj=(JavascriptExecutor)drive;
+	jj.executeScript("arguments[0].ScrollInToView(true);", ele);
+}
+public void scrolldown()
+{
+	JavascriptExecutor jj=(JavascriptExecutor)drive;
+	jj.executeScript("window.scrollBy(0,1500)");
+	
+}
+public void scrollup()
+{
+	JavascriptExecutor jj=(JavascriptExecutor)drive;
+	jj.executeScript("window.scrollBy(0,-1500)");
+	
+}
 }
 
 
